@@ -1,7 +1,8 @@
 <template>
   <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/login">login</router-link>
+    <router-link to="/">圖書館</router-link> |
+    <router-link to="/login">登入</router-link> |
+    <router-link to="/record">借閱紀錄</router-link>
   </nav>
   <router-view/>
 </template>

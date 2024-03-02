@@ -36,6 +36,7 @@
 </template>
 <script>
 import axios from "axios";
+import router from '../../router'
 export default {
   data() {
     return {
@@ -104,6 +105,8 @@ export default {
           if (response.data.status === "Y") {
             alert("登入成功");
             this.setDefualt();
+            sessionStorage.setItem("user_id", response.data.user_id);
+            router.push('/');
           }
         })
         .catch((error) => {
