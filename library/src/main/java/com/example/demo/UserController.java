@@ -60,14 +60,15 @@ public class UserController {
 		List<Map<String, Object>> mapList = a.queryForList(sql, map);
 		Map<String, Object> mapReturn = new HashMap<>();
 		mapReturn.put("status", "N");
-		if (mapList.size() > 0) {
 
+		if (mapList.size() > 0) {
 			String ps = MapUtils.getString(mapList.get(0), "password");
 			// 比較密碼是否一樣
 			if (ps.equals(encryptPassword(user.getPassword()))) {
 				map.put("last_login_time", new Date());
 				a.update(sql2, map);
 				mapReturn.put("status", "Y");
+				mapReturn.put("user_id", MapUtils.getString(mapList.get(0), "user_id"));
 			}
 		}
 
