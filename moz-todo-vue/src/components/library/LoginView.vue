@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="userId === ''">
     <h2>登入</h2>
     <!-- 姓名 -->
     <div class="form-group" v-if="isRegisterView">
@@ -33,10 +33,11 @@
     <!-- 註冊按鈕 -->
     <Button label="註冊" v-on:click="register" v-if="isRegisterView" />
   </div>
+  <Button label="登出" v-on:click="signOut" v-if="userId !== ''" />
 </template>
 <script>
 import axios from "axios";
-import router from '../../router'
+import router from "../../router";
 export default {
   data() {
     return {
@@ -45,9 +46,19 @@ export default {
       phoneNumber: "",
       confirmPassword: "",
       isRegisterView: false,
+      userId: "",
     };
   },
+  created() {
+    this.init();
+  },
   methods: {
+    init() {
+      const t = sessionStorage.getItem("user_id");
+      if (t && t !== "") {
+        this.userId = t;
+      }
+    },
     showRegister() {
       this.isRegisterView = true;
     },
@@ -105,8 +116,9 @@ export default {
           if (response.data.status === "Y") {
             alert("登入成功");
             this.setDefualt();
+            this.userId = response.data.user_id;
             sessionStorage.setItem("user_id", response.data.user_id);
-            router.push('/');
+            router.push("/");
           }
         })
         .catch((error) => {
@@ -115,6 +127,10 @@ export default {
           // 清空表单
           this.password = "";
         });
+    },
+    signOut() {
+      sessionStorage.clear();
+      this.userId = "";
     },
   },
 };

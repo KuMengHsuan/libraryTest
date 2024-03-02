@@ -28,6 +28,7 @@
 </template>
 <script>
 import axios from "axios";
+import router from "../../router";
 export default {
   data() {
     return {
@@ -45,7 +46,7 @@ export default {
         this.userId = userId;
       }
       await axios
-        .post("http://localhost:8085/book/query",{})
+        .post("http://localhost:8085/book/query", {})
         .then((response) => {
           console.log(response.data);
           this.bookList = [...response.data];
@@ -68,10 +69,10 @@ export default {
       }
     },
     async borrow(data) {
-      console.log(data);
-      console.log(data.inventory_id);
-      if (this.userId && this.userId.trim === "") {
+      this.userId = sessionStorage.getItem("user_id");
+      if (!this.userId || this.userId.trim === "") {
         alert("請先登入");
+        router.push("/login");
         return;
       }
       if (data.status === "N") {
@@ -94,6 +95,10 @@ export default {
       } else {
         alert("此書不可進行借閱");
       }
+    },
+    signOut() {
+      sessionStorage.clear();
+      this.userId = "";
     },
   },
 };

@@ -1,0 +1,8 @@
+INSERT INTO `book` (`isbn`, `name`) VALUES ('1444', '被討厭的勇氣');
+INSERT INTO `book` (`isbn`, `name`, `author`) VALUES ('1443', '原子習慣', 'kk');
+INSERT INTO `book` (`isbn`, `name`, `introduction`) VALUES ('1442', '子彈筆記', '22');
+
+
+INSERT INTO `inventory` (`inventory_id`, `isbn`, `status`) VALUES ('qaz125', '1444', 'N');
+INSERT INTO `inventory` (`inventory_id`, `isbn`, `status`) VALUES ('qaz126', '1443', 'N');
+INSERT INTO `inventory` (`inventory_id`, `isbn`, `status`) VALUES ('qaz127', '1442', 'N');

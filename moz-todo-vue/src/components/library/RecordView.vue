@@ -27,6 +27,7 @@
 
 <script>
 import axios from "axios";
+import router from "../../router";
 export default {
   data() {
     return {
@@ -39,13 +40,11 @@ export default {
   },
   methods: {
     async refresh() {
-      const userId = sessionStorage.getItem("user_id");
-      console.log(userId);
-      if (userId && userId.trim !== "") {
-        this.userId = userId;
-      }
-      if (this.userId && this.userId.trim === "") {
+      this.userId = sessionStorage.getItem("user_id");
+      console.log(this.userId);
+      if (!this.userId || this.userId.trim === "") {
         alert("請先登入");
+        router.push("/login");
         return;
       }
       const data = {
@@ -63,16 +62,17 @@ export default {
         });
     },
     setDate(date) {
-        console.log(typeof date)
-    //   if (typeof date==='Object') {
-        
-    //   }
+      console.log(typeof date);
+      //   if (typeof date==='Object') {
+
+      //   }
     },
     async borrowReturn(data) {
-      console.log(data);
-      console.log(data.inventory_id);
-      if (this.userId && this.userId.trim === "") {
+      this.userId = sessionStorage.getItem("user_id");
+      console.log(this.userId);
+      if (!this.userId || this.userId.trim === "") {
         alert("請先登入");
+        router.push("/login");
         return;
       }
       if (data.return_time === null) {
