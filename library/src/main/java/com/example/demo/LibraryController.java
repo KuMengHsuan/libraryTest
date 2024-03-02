@@ -24,7 +24,7 @@ public class LibraryController {
 
 	@PostMapping("/book/query")
 	public List<Map<String, Object>> query(@RequestBody Map<String, Object> queryMap) {
-		String sql = "SELECT * FROM book a inner join inventory b on a.isbn=b.isbn";
+		String sql = "call queryBook";
 
 		Map<String, Object> map = new HashMap<>();
 
@@ -34,7 +34,7 @@ public class LibraryController {
 
 	@PostMapping("/book/borrow")
 	public Map<String, Object> borrow(@RequestBody Map<String, Object> map) {
-		String sql = "SELECT * FROM inventory where inventory_id=:inventory_id";
+		String sql = "call queryInventory(:inventory_id)";
 
 		List<Map<String, Object>> mapList = a.queryForList(sql, map);
 		if (mapList.size() > 0) {
@@ -63,8 +63,7 @@ public class LibraryController {
 
 	@PostMapping("/record/query")
 	public List<Map<String, Object>> queryRecord(@RequestBody User user) {
-		String sql = "SELECT * FROM borrowing_record a inner join inventory b on a.inventory_id=b.inventory_id inner join book c on c.isbn=b.isbn "
-				+ "where user_id=:user_id";
+		String sql = "call queryRecord(:user_id)";
 		Map<String, Object> map = new HashMap<>();
 		map.put("user_id", user.getUserId());
 		List<Map<String, Object>> mapList = a.queryForList(sql, map);
@@ -103,7 +102,7 @@ public class LibraryController {
 	 * @param inventoryId
 	 */
 	private void updateInventoryStatus(String inventoryId, String status) {
-		String sql = "UPDATE inventory SET status=:status WHERE inventory_id = :inventory_id";
+		String sql = "call updateInventoryStatus(:status,:inventory_id)";
 		Map<String, Object> map = new HashMap<>();
 		map.put("inventory_id", inventoryId);
 		map.put("status", status);
@@ -117,8 +116,7 @@ public class LibraryController {
 	 * @param userId
 	 */
 	private void addRecord(String inventoryId, String userId) {
-		String sql = "INSERT INTO borrowing_record(pk_id,user_id,inventory_id,borrowing_time) value"
-				+ " ( :pk_id,:user_id,:inventory_id,:borrowing_time)";
+		String sql = "call addRecord(:pk_id,:user_id,:inventory_id,:borrowing_time)";
 		Map<String, Object> map = new HashMap<>();
 		map.put("pk_id", UUID.randomUUID().toString().replace("-", ""));
 		map.put("user_id", userId);
@@ -133,7 +131,7 @@ public class LibraryController {
 	 * @param pkId
 	 */
 	private void updateRecord(String inventoryId, String userId) {
-		String sql = "UPDATE borrowing_record SET return_time=:return_time WHERE inventory_id=:inventory_id and user_id=:user_id and return_time is null";
+		String sql = "call updateRecord(:return_time,:inventory_id,:user_id)";
 		Map<String, Object> map = new HashMap<>();
 		map.put("inventory_id", inventoryId);
 		map.put("user_id", userId);

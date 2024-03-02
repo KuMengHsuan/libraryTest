@@ -6,3 +6,123 @@ INSERT INTO `book` (`isbn`, `name`, `introduction`) VALUES ('1442', '子彈筆�
 INSERT INTO `inventory` (`inventory_id`, `isbn`, `status`) VALUES ('qaz125', '1444', 'N');
 INSERT INTO `inventory` (`inventory_id`, `isbn`, `status`) VALUES ('qaz126', '1443', 'N');
 INSERT INTO `inventory` (`inventory_id`, `isbn`, `status`) VALUES ('qaz127', '1442', 'N');
+
+DELIMITER //
+CREATE PROCEDURE `queryBook` ()
+BEGIN
+SELECT * FROM book a inner join inventory b on a.isbn=b.isbn;
+END
+//
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE `queryRecord` (
+IN  userId varchar(32)
+)
+BEGIN
+SELECT * FROM borrowing_record a 
+inner join inventory b on a.inventory_id=b.inventory_id 
+inner join book c on c.isbn=b.isbn
+where user_id=userId;
+END
+//
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE `queryInventory` (
+in inventoryId varchar(32))
+BEGIN
+SELECT * FROM inventory where inventory_id=inventoryId;
+END
+//
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE `updateInventoryStatus` (
+in statusIn varchar(32),
+in inventoryId  varchar(32)
+)
+BEGIN
+UPDATE inventory SET status=statusIn
+WHERE inventory_id =inventoryId;
+END
+//
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE `addRecord` (
+in pk_id_in varchar(32),
+in user_id_in varchar(32),
+in inventory_id_in varchar(32),
+in borrowing_time_in DATETIME(6)
+)
+BEGIN
+INSERT INTO borrowing_record(pk_id,user_id,inventory_id,borrowing_time) value
+ ( pk_id_in,user_id_in,inventory_id_in,borrowing_time_in);
+END
+//
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE `updateRecord` (
+in return_time_in DATETIME(6),
+in inventory_id_in varchar(32),
+in user_id_in varchar(32)
+)
+BEGIN
+UPDATE borrowing_record 
+SET return_time=return_time_in 
+WHERE inventory_id=inventory_id_in
+and user_id=user_id_in
+and return_time is null;
+END
+//
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE `insertUser` (
+in user_id_in varchar(32),
+in phone_number_in varchar(32),
+in password_in varchar(32),
+in user_name_in varchar(32),
+in registration_time_in DATETIME(6)
+)
+BEGIN
+INSERT INTO user(user_id,phone_number,password,user_name,registration_time) value
+( user_id_in,phone_number_in,password_in,user_name_in,registration_time_in);
+END
+//
+
+DELIMITER ;
+
+DELIMITER //
+CREATE PROCEDURE `queryUser` (
+in phone_number_in varchar(32))
+BEGIN
+SELECT * FROM user 
+WHERE phone_number = phone_number_in;
+END
+//
+
+DELIMITER ;
+
+
+DELIMITER //
+CREATE PROCEDURE `updateLoginTime` (
+in last_login_time_in varchar(32),
+in phone_number_in varchar(32)
+)
+BEGIN
+UPDATE user 
+SET last_login_time= last_login_time_in
+WHERE phone_number = phone_number_in;
+END
+//
+
+DELIMITER ;

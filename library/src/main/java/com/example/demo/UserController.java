@@ -27,8 +27,7 @@ public class UserController {
 
 	@PostMapping("/user/register")
 	public Map<String, Object> insert(@RequestBody User user) {
-		String sql = "INSERT INTO user(user_id,phone_number,password,user_name,registration_time) value"
-				+ " ( :user_id,:phone_number,:password,:user_name,:registration_time)";
+		String sql = "call insertUser( :user_id,:phone_number,:password,:user_name,:registration_time)";
 
 		Map<String, Object> map = new HashMap<>();
 		map.put("password", encryptPassword(user.getPassword()));
@@ -52,8 +51,8 @@ public class UserController {
 	 */
 	@PostMapping("/user/login")
 	public Map<String, Object> login(@RequestBody User user) {
-		String sql = "SELECT * FROM user WHERE phone_number = :phone_number";
-		String sql2 = "UPDATE user SET last_login_time= :last_login_time WHERE phone_number = :phone_number";
+		String sql = "call queryUser (:phone_number)";
+		String sql2 = "call updateLoginTime( :last_login_time, :phone_number)";
 		Map<String, Object> map = new HashMap<>();
 		map.put("phone_number", user.getPhoneNumber());
 
